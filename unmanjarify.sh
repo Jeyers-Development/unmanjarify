@@ -167,4 +167,18 @@ fi
 sudo grub-mkconfig -o /boot/grub/grub.cfg
 echo -e "${GREEN}✅ GRUB installation complete! Reboot recommended.${RESET}"
 
+echo "🦊 Configuring Firefox default homepage..."
+FIREFOX_PREF_DIR="$HOME/.mozilla/firefox"
+DEFAULT_PROFILE=$(find "$FIREFOX_PREF_DIR" -maxdepth 1 -type d -name "*.default*" | head -n1)
+
+if [ -n "$DEFAULT_PROFILE" ]; then
+    PREF_FILE="$DEFAULT_PROFILE/user.js"
+    echo 'user_pref("browser.startup.homepage", "about:blank");' >> "$PREF_FILE"
+    echo 'user_pref("browser.startup.page", 0);' >> "$PREF_FILE"  # 0 = blank page
+    echo "✅ Firefox homepage set to blank."
+else
+    echo "❔ Firefox profile not found. Will set homepage on first launch."
+fi
+
+
 echo -e "${BLUE}🎉 Unmanjarify finished! Enjoy your clean Arch-style system.${RESET}"
